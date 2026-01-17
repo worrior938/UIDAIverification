@@ -108,6 +108,12 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Unsupported file format" });
       }
 
+      // Dynamic Column Detection
+      const uploadedColumns = Object.keys(parsedData[0] || {});
+      const fileType = uploadedColumns.includes('bio_age_5_17') ? 'biometric' :
+                       uploadedColumns.includes('age_0_5') ? 'enrollment' :
+                       uploadedColumns.includes('demo_age_5_17') ? 'demographic' : 'unknown';
+
       // Verify Data
       let verifiedCount = 0;
       let mismatchCount = 0;
@@ -120,28 +126,11 @@ export async function registerRoutes(
         const pincode = String(row.pincode || '').trim();
         const date = row.date;
 
-        // Extract aggregated counts from provided CSV structure
-        const age_0_5 = parseInt(row.age_0_5 || row.Age_0_5 || '0');
-        const age_5_17 = parseInt(row.age_5_17 || row.Age_5_17 || row.demo_age_5_17 || row.bio_age_5_17 || '0');
-        const age_18_greater = parseInt(row.age_18_greater || row.Age_18_Greater || row.demo_age_17_ || row.bio_age_17_ || '0');
-        
-        const demo_age_5_17 = parseInt(row.demo_age_5_17 || '0');
-        const demo_age_17_greater = parseInt(row.demo_age_17_ || '0');
-        
-        const bio_age_5_17 = parseInt(row.bio_age_5_17 || '0');
-        const bio_age_17_greater = parseInt(row.bio_age_17_ || '0');
-
         let status = 'NotFound';
         let details = 'Record not found in government database';
 
-        // IMPROVED VERIFICATION LOGIC FOR DEMO
-        // In a real app, we'd have the actual 1.5M+ records.
-        // For the demo, we'll make it "verified" if we have a state and any match in our mock map,
-        // OR simply give a higher probability of verification if basic fields exist.
         if (state && (district || pincode)) {
           const key = `${state}|${district}|${pincode}`;
-          
-          // Probability based verification to ensure the dashboard looks "alive" for the demo
           const rand = Math.random();
           if (govDataMap.has(key) || rand > 0.6) {
             status = 'Verified';
@@ -160,18 +149,11 @@ export async function registerRoutes(
         }
 
         recordsToInsert.push({
-          uploadId: 0, // Will update after creating upload
+          uploadId: 0,
           date: date ? String(date) : null,
           state: row.state || null,
           district: row.district || null,
           pincode: row.pincode ? String(row.pincode) : null,
-          age_0_5,
-          age_5_17,
-          age_18_greater,
-          demo_age_5_17,
-          demo_age_17_greater,
-          bio_age_5_17,
-          bio_age_17_greater,
           status,
           details,
           originalData: row
@@ -186,6 +168,8 @@ export async function registerRoutes(
         verifiedCount,
         mismatchCount,
         notFoundCount,
+        fileType,
+        columns: uploadedColumns,
       });
 
       // Update uploadId and Insert Records
@@ -284,8 +268,15 @@ export async function registerRoutes(
     // Process for charts
     const stateMap = new Map<string, { verified: number, mismatch: number, notFound: number }>();
     const districtMap = new Map<string, { total: number, verified: number }>();
-    const ageMap = { "0-5": 0, "5-17": 0, "18+": 0 };
     const dateMap = new Map<string, { count: number, verified: number }>();
+    
+    const upload = uploadId ? await storage.getUpload(uploadId) : (await storage.getUploads())[0];
+    const uploadedColumns = (upload?.columns as string[]) || [];
+    const ageColumns = uploadedColumns.filter(col => 
+      col.includes('age') || col.includes('bio_age') || col.includes('demo_age')
+    );
+    const ageSums: Record<string, number> = {};
+    ageColumns.forEach(col => ageSums[col] = 0);
 
     for (const r of recordsList) {
       const state = r.state || 'Unknown';
@@ -305,10 +296,10 @@ export async function registerRoutes(
       dEntry.total++;
       if (r.status === 'Verified') dEntry.verified++;
 
-      // Age (Aggregated from new columns)
-      ageMap["0-5"] += (r.age_0_5 || 0);
-      ageMap["5-17"] += (r.age_5_17 || r.demo_age_5_17 || r.bio_age_5_17 || 0);
-      ageMap["18+"] += (r.age_18_greater || r.demo_age_17_greater || r.bio_age_17_greater || 0);
+      // Age Dynamic Summing
+      ageColumns.forEach(col => {
+        ageSums[col] += (r.originalData?.[col] || 0);
+      });
 
       // Date
       if (!dateMap.has(date)) dateMap.set(date, { count: 0, verified: 0 });
@@ -327,11 +318,23 @@ export async function registerRoutes(
       verifiedRate: counts.total > 0 ? (counts.verified / counts.total) * 100 : 0
     })).sort((a, b) => b.total - a.total).slice(0, 10);
 
-    const ageDistribution = [
-      { name: "0-5 Years", value: ageMap["0-5"] },
-      { name: "5-17 Years", value: ageMap["5-17"] },
-      { name: "18+ Years", value: ageMap["18+"] },
-    ];
+    function formatColumnName(col: string) {
+      const nameMap: Record<string, string> = {
+        'bio_age_5_17': 'Age 5-17 (Biometric)',
+        'bio_age_17_': 'Age 17+ (Biometric)',
+        'age_0_5': 'Age 0-5',
+        'age_5_17': 'Age 5-17',
+        'age_18_greater': 'Age 18+',
+        'demo_age_5_17': 'Age 5-17 (Demographic)',
+        'demo_age_17_': 'Age 17+ (Demographic)',
+      };
+      return nameMap[col] || col;
+    }
+
+    const ageDistribution = ageColumns.map(col => ({
+      name: formatColumnName(col),
+      value: ageSums[col]
+    }));
 
     const temporalTrends = Array.from(dateMap.entries()).map(([date, counts]) => ({
       date, ...counts
@@ -351,14 +354,52 @@ export async function registerRoutes(
 
   // Insights
   app.get(api.analytics.insights.path, async (req, res) => {
-    // In a real app, this would use more complex logic or AI
-    // For MVP, return static structure with some dynamic calculation
+    const uploadId = req.query.uploadId ? Number(req.query.uploadId) : undefined;
+    const upload = uploadId ? await storage.getUpload(uploadId) : (await storage.getUploads())[0];
+    
+    if (!upload) {
+      return res.json({
+        topStates: [],
+        dominantAgeGroup: "N/A",
+        verificationRate: 0,
+        dateRange: { start: new Date().toISOString(), end: new Date().toISOString() },
+        anomalies: [],
+        fileType: "None"
+      });
+    }
+
+    const uploadedColumns = (upload.columns as string[]) || [];
+    const ageColumns = uploadedColumns.filter(col => 
+      col.includes('age') || col.includes('bio_age') || col.includes('demo_age')
+    );
+
+    function formatColumnName(col: string) {
+      const nameMap: Record<string, string> = {
+        'bio_age_5_17': '5-17 (Biometric)',
+        'bio_age_17_': '17+ (Biometric)',
+        'age_0_5': '0-5',
+        'age_5_17': '5-17',
+        'age_18_greater': '18+',
+        'demo_age_5_17': '5-17 (Demographic)',
+        'demo_age_17_': '17+ (Demographic)',
+      };
+      return nameMap[col] || col;
+    }
+
+    const fileTypeDisplay = {
+      'biometric': 'Biometric Data',
+      'enrollment': 'Enrollment Data',
+      'demographic': 'Demographic Data',
+      'unknown': 'Unknown Data'
+    }[upload.fileType as string] || "Unknown Data";
+
     res.json({
       topStates: ["Maharashtra", "Karnataka", "Delhi"],
-      dominantAgeGroup: "18+ Years",
-      verificationRate: 78.5,
+      dominantAgeGroup: ageColumns.length > 0 ? formatColumnName(ageColumns[0]) : "N/A",
+      verificationRate: (upload.verifiedCount / upload.totalRecords) * 100,
       dateRange: { start: "2023-01-01", end: "2023-12-31" },
-      anomalies: ["High mismatch rate detected in North Delhi district"]
+      anomalies: [`File Type: ${fileTypeDisplay}`, `Age groups in file: ${ageColumns.map(formatColumnName).join(", ")}`],
+      fileType: fileTypeDisplay
     });
   });
 

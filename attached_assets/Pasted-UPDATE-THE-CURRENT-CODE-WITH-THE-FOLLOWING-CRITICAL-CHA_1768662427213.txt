@@ -1,0 +1,141 @@
+UPDATE THE CURRENT CODE WITH THE FOLLOWING CRITICAL CHANGES:
+
+PROBLEM TO FIX:
+The application must dynamically detect which columns are present in the uploaded file and ONLY display those specific columns. Do not assume or show columns that don't exist in the uploaded file.
+
+COLUMN SPECIFICATIONS:
+
+File Type 1 - Biometric Data:
+- Common: date, state, district, pincode
+- Specific: bio_age_5_17, bio_age_17_
+
+File Type 2 - Enrollment Data:
+- Common: date, state, district, pincode
+- Specific: age_0_5, age_5_17, age_18_greater
+
+File Type 3 - Demographic Data:
+- Common: date, state, district, pincode
+- Specific: demo_age_5_17, demo_age_17_
+
+REQUIRED CHANGES:
+
+1. DYNAMIC COLUMN DETECTION:
+   When a file is uploaded, analyze the actual headers/columns present:
+```javascript
+   // After parsing the file
+   const uploadedColumns = Object.keys(parsedData[0] || {});
+   
+   // Detect file type based on columns
+   const fileType = uploadedColumns.includes('bio_age_5_17') ? 'biometric' :
+                    uploadedColumns.includes('age_0_5') ? 'enrollment' :
+                    uploadedColumns.includes('demo_age_5_17') ? 'demographic' : 'unknown';
+```
+
+2. DATA TABLE DISPLAY:
+   - Dynamically generate table columns based on uploadedColumns array
+   - Do NOT hardcode column names
+   - Example: If file has [date, state, district, pincode, demo_age_5_17, demo_age_17_], show ONLY these 6 columns
+   - Do NOT show age_18_greater or bio_age_17_ if they don't exist in the file
+
+3. CHARTS AND VISUALIZATIONS:
+   - Age Distribution Chart should adapt based on file type:
+     * Biometric file → Show only: bio_age_5_17, bio_age_17_
+     * Enrollment file → Show only: age_0_5, age_5_17, age_18_greater
+     * Demographic file → Show only: demo_age_5_17, demo_age_17_
+   
+   - Dynamically create chart data:
+```javascript
+   const ageColumns = uploadedColumns.filter(col => 
+     col.includes('age') || col.includes('bio_age') || col.includes('demo_age')
+   );
+   
+   const ageDistributionData = ageColumns.map(col => ({
+     name: formatColumnName(col), // Convert 'bio_age_5_17' to 'Age 5-17 (Biometric)'
+     value: data.reduce((sum, row) => sum + (row[col] || 0), 0)
+   }));
+```
+
+4. COLUMN NAME FORMATTING:
+   Create a helper function to display user-friendly column names:
+```javascript
+   function formatColumnName(col) {
+     const nameMap = {
+       'bio_age_5_17': 'Age 5-17 (Biometric)',
+       'bio_age_17_': 'Age 17+ (Biometric)',
+       'age_0_5': 'Age 0-5',
+       'age_5_17': 'Age 5-17',
+       'age_18_greater': 'Age 18+',
+       'demo_age_5_17': 'Age 5-17 (Demographic)',
+       'demo_age_17_': 'Age 17+ (Demographic)',
+       'date': 'Date',
+       'state': 'State',
+       'district': 'District',
+       'pincode': 'Pincode'
+     };
+     return nameMap[col] || col;
+   }
+```
+
+5. VERIFICATION LOGIC UPDATE:
+   - Match uploaded records against the correct government dataset based on file type
+   - If biometric file uploaded → compare against biometric government data
+   - If enrollment file uploaded → compare against enrollment government data
+   - If demographic file uploaded → compare against demographic government data
+   
+   - Matching logic:
+```javascript
+   function verifyRecord(record, governmentData, fileType) {
+     const key = `${record.date}_${record.state}_${record.district}_${record.pincode}`;
+     const govRecord = governmentData.get(key);
+     
+     if (!govRecord) return 'NOT_FOUND';
+     
+     // Compare only the age columns that exist in the uploaded file
+     const ageColumns = Object.keys(record).filter(col => 
+       col.includes('age') || col.includes('bio_') || col.includes('demo_')
+     );
+     
+     for (const col of ageColumns) {
+       if (record[col] !== govRecord[col]) {
+         return 'MISMATCH';
+       }
+     }
+     
+     return 'VERIFIED';
+   }
+```
+
+6. INSIGHTS PANEL UPDATE:
+   - Display file type detected: "File Type: Biometric Data"
+   - Show which age groups are present in THIS file
+   - Example: "Age groups in file: 5-17 (Biometric), 17+ (Biometric)"
+   - Do NOT mention age groups not in the file
+
+7. SUMMARY CARDS:
+   - Show total sum for each age column present
+   - Example for biometric file:
+     * Card 1: Total Bio Age 5-17: [sum of bio_age_5_17]
+     * Card 2: Total Bio Age 17+: [sum of bio_age_17_]
+   - Do NOT show cards for columns not present
+
+8. ERROR HANDLING:
+   - If uploaded file has unexpected columns, show warning
+   - If file doesn't match any known format, display: "Unknown file format. Expected columns not found."
+   - Validate that common columns (date, state, district, pincode) are present
+
+9. EXPORT FUNCTIONALITY:
+   - When exporting results, include ONLY the columns from the uploaded file
+   - Add verification_status column
+   - Maintain original column order
+
+IMPLEMENTATION CHECKLIST:
+□ Remove all hardcoded column references
+□ Implement dynamic column detection on file upload
+□ Update DataTable component to use dynamic columns
+□ Update all chart components to use only present columns
+□ Update verification logic to compare correct dataset
+□ Update insights to reflect actual file content
+□ Test with all 3 file types to ensure correct behavior
+□ Add file type indicator in UI
+
+UPDATE THE ENTIRE APPLICATION to be completely dynamic and column-aware. The user should be able to upload ANY of the 3 file types and see ONLY the data that exists in that specific file.

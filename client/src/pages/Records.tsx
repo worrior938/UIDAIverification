@@ -73,44 +73,51 @@ export default function Records() {
     status: statusFilter === "all" ? undefined : statusFilter
   });
 
+  const activeUpload = uploads?.find(u => u.id === activeUploadId);
+  const uploadedColumns = (activeUpload?.columns as string[]) || [];
+
+  function formatColumnName(col: string) {
+    const nameMap: Record<string, string> = {
+      'bio_age_5_17': 'Age 5-17 (Biometric)',
+      'bio_age_17_': 'Age 17+ (Biometric)',
+      'age_0_5': 'Age 0-5',
+      'age_5_17': 'Age 5-17',
+      'age_18_greater': 'Age 18+',
+      'demo_age_5_17': 'Age 5-17 (Demographic)',
+      'demo_age_17_': 'Age 17+ (Demographic)',
+      'date': 'Date',
+      'state': 'State',
+      'district': 'District',
+      'pincode': 'Pincode'
+    };
+    return nameMap[col] || col.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+
   const columnHelper = createColumnHelper<any>();
 
-  const columns = [
+  const baseColumns = [
     columnHelper.accessor("id", {
       header: "ID",
       cell: info => <span className="font-mono text-slate-500 text-xs">#{info.getValue()}</span>,
     }),
-    columnHelper.accessor((row) => {
-      const data = row.originalData || {};
-      return data.name || data.Name || data.full_name || data.Full_Name || data.resident_name || data.Resident_Name || "N/A";
-    }, {
-      id: "name",
-      header: "Name",
-      cell: info => <span className="font-medium text-slate-900">{info.getValue()}</span>,
-    }),
-    columnHelper.accessor("state", {
-      header: "State",
-    }),
-    columnHelper.accessor("district", {
-      header: "District",
-    }),
-    columnHelper.accessor("pincode", {
-      header: "Pincode",
-    }),
-    columnHelper.accessor((row) => {
-      return (row.age_0_5 || 0) + (row.age_5_17 || 0) + (row.age_18_greater || 0) + 
-             (row.demo_age_5_17 || 0) + (row.demo_age_17_greater || 0) +
-             (row.bio_age_5_17 || 0) + (row.bio_age_17_greater || 0);
-    }, {
-      id: "total_count",
-      header: "Count",
-      cell: info => <span className="font-medium">{info.getValue()}</span>
-    }),
+  ];
+
+  const dynamicColumns = uploadedColumns.map(col => 
+    columnHelper.accessor((row) => row.originalData?.[col], {
+      id: col,
+      header: formatColumnName(col),
+      cell: info => <span className={cn(col === 'name' ? "font-medium text-slate-900" : "")}>{info.getValue() ?? "N/A"}</span>
+    })
+  );
+
+  const statusColumns = [
     columnHelper.accessor("status", {
       header: "Status",
       cell: info => <StatusBadge status={info.getValue()} />,
     }),
   ];
+
+  const columns = [...baseColumns, ...dynamicColumns, ...statusColumns];
 
   const table = useReactTable({
     data: recordsData?.data || [],

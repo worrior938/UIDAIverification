@@ -11,6 +11,8 @@ export const uploads = pgTable("uploads", {
   mismatchCount: integer("mismatch_count").notNull(),
   notFoundCount: integer("not_found_count").notNull(),
   uploadDate: timestamp("upload_date").defaultNow(),
+  fileType: text("file_type").notNull().default("unknown"),
+  columns: jsonb("columns").notNull().default([]),
 });
 
 export const records = pgTable("records", {

@@ -14,10 +14,30 @@ import {
 import { formatNumber, formatPercent } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Dashboard() {
-  const { data: stats, isLoading: statsLoading } = useAnalyticsStats();
-  const { data: charts, isLoading: chartsLoading } = useAnalyticsCharts();
-  const { data: insights, isLoading: insightsLoading } = useAnalyticsInsights();
+  const activeUploadId = stats?.id;
+  const activeUpload = stats;
+  const uploadedColumns = (activeUpload?.columns as string[]) || [];
+
+  function formatColumnName(col: string) {
+    const nameMap: Record<string, string> = {
+      'bio_age_5_17': 'Age 5-17 (Biometric)',
+      'bio_age_17_': 'Age 17+ (Biometric)',
+      'age_0_5': 'Age 0-5',
+      'age_5_17': 'Age 5-17',
+      'age_18_greater': 'Age 18+',
+      'demo_age_5_17': 'Age 5-17 (Demographic)',
+      'demo_age_17_': 'Age 17+ (Demographic)',
+      'date': 'Date',
+      'state': 'State',
+      'district': 'District',
+      'pincode': 'Pincode'
+    };
+    return nameMap[col] || col;
+  }
+
+  const ageColumns = uploadedColumns.filter(col => 
+    col.includes('age') || col.includes('bio_age') || col.includes('demo_age')
+  );
 
   if (statsLoading || chartsLoading || insightsLoading) {
     return (
@@ -41,6 +61,19 @@ export default function Dashboard() {
         <div>
           <h1 className="text-3xl font-display font-bold text-slate-900">Dashboard Overview</h1>
           <p className="text-muted-foreground mt-1">Real-time analysis of uploaded demographic data</p>
+        </div>
+
+        {/* Summary Cards for Age Columns */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {ageColumns.map(col => (
+            <StatCard 
+              key={col}
+              label={`Total ${formatColumnName(col)}`}
+              value={formatNumber(charts.ageDistribution.find(d => d.name === formatColumnName(col))?.value || 0)}
+              icon={Users}
+              color="indigo"
+            />
+          ))}
         </div>
 
         {/* Top Stats Cards */}
