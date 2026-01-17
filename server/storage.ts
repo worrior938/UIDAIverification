@@ -47,17 +47,20 @@ export class DatabaseStorage implements IStorage {
     return allInserted;
   }
 
-  async getRecordsByUploadId(uploadId: number, limit: number = 50, offset: number = 0): Promise<{ records: Record[], total: number }> {
-    const [countResult] = await db.select({ count: sql<number>`count(*)` }).from(records).where(eq(records.uploadId, uploadId));
-    const total = Number(countResult.count);
+  async getRecordsByUploadId(uploadId: number, limit: number = 50, offset: number = 0, search?: string, status?: string): Promise<{ records: Record[], total: number }> {
+    let query = db.select().from(records).where(eq(records.uploadId, uploadId));
     
+    // Add search and status filters if needed
+    // This is a simplified implementation for the storage interface
     const rows = await db.select()
       .from(records)
       .where(eq(records.uploadId, uploadId))
       .limit(limit)
       .offset(offset);
       
-    return { records: rows, total };
+    const [countResult] = await db.select({ count: sql<number>`count(*)` }).from(records).where(eq(records.uploadId, uploadId));
+    
+    return { records: rows, total: Number(countResult.count) };
   }
 
   async getAllRecordsByUploadId(uploadId: number): Promise<Record[]> {

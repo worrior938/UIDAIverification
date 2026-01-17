@@ -14,8 +14,12 @@ import {
 import { formatNumber, formatPercent } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-  const activeUploadId = stats?.id;
-  const activeUpload = stats;
+export default function Dashboard() {
+  const { data: stats, isLoading: statsLoading } = useAnalyticsStats();
+  const { data: charts, isLoading: chartsLoading } = useAnalyticsCharts();
+  const { data: insights, isLoading: insightsLoading } = useAnalyticsInsights();
+
+  const activeUpload = stats as any;
   const uploadedColumns = (activeUpload?.columns as string[]) || [];
 
   function formatColumnName(col: string) {
@@ -71,7 +75,7 @@ import { Skeleton } from "@/components/ui/skeleton";
               label={`Total ${formatColumnName(col)}`}
               value={formatNumber(charts.ageDistribution.find(d => d.name === formatColumnName(col))?.value || 0)}
               icon={Users}
-              color="indigo"
+              color="blue"
             />
           ))}
         </div>

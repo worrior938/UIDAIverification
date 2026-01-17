@@ -75,6 +75,14 @@ export default function Records() {
 
   const activeUpload = uploads?.find(u => u.id === activeUploadId);
   const uploadedColumns = (activeUpload?.columns as string[]) || [];
+  const fileType = activeUpload?.fileType || "unknown";
+
+  const fileTypeDisplay = {
+    'biometric': 'Biometric Data',
+    'enrollment': 'Enrollment Data',
+    'demographic': 'Demographic Data',
+    'unknown': 'Unknown Data'
+  }[fileType] || "Unknown Data";
 
   function formatColumnName(col: string) {
     const nameMap: Record<string, string> = {
@@ -134,7 +142,7 @@ export default function Records() {
           <div>
             <h1 className="text-3xl font-display font-bold text-slate-900">Data Records</h1>
             <p className="text-muted-foreground mt-1">
-              Browse and verify individual demographic entries.
+              Browse and verify individual entries for <span className="font-semibold text-primary">{fileTypeDisplay}</span>.
             </p>
           </div>
           <div className="flex items-center gap-3">

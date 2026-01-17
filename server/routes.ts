@@ -224,18 +224,24 @@ export async function registerRoutes(
 
   // Analytics Stats
   app.get(api.analytics.stats.path, async (req, res) => {
-    // If uploadId provided, get for that upload, else aggregate all (MVP: last upload or specific)
     const uploadId = req.query.uploadId ? Number(req.query.uploadId) : undefined;
     
     if (uploadId) {
-      const stats = await storage.getUploadStats(uploadId);
+      const upload = await storage.getUpload(uploadId);
+      if (!upload) return res.status(404).json({ message: "Upload not found" });
+      
       return res.json({
-        ...stats,
-        verificationRate: stats.total > 0 ? (stats.verified / stats.total) * 100 : 0
+        id: upload.id,
+        total: upload.totalRecords,
+        verified: upload.verifiedCount,
+        mismatch: upload.mismatchCount,
+        notFound: upload.notFoundCount,
+        verificationRate: upload.totalRecords > 0 ? (upload.verifiedCount / upload.totalRecords) * 100 : 0,
+        fileType: upload.fileType,
+        columns: upload.columns
       });
     }
 
-    // Default: Aggregate all uploads (simplified for MVP: just get latest)
     const uploads = await storage.getUploads();
     if (uploads.length === 0) {
       return res.json({ total: 0, verified: 0, mismatch: 0, notFound: 0, verificationRate: 0 });
@@ -243,11 +249,14 @@ export async function registerRoutes(
 
     const latest = uploads[0];
     res.json({
+      id: latest.id,
       total: latest.totalRecords,
       verified: latest.verifiedCount,
       mismatch: latest.mismatchCount,
       notFound: latest.notFoundCount,
-      verificationRate: latest.totalRecords > 0 ? (latest.verifiedCount / latest.totalRecords) * 100 : 0
+      verificationRate: latest.totalRecords > 0 ? (latest.verifiedCount / latest.totalRecords) * 100 : 0,
+      fileType: latest.fileType,
+      columns: latest.columns
     });
   });
 

@@ -1,0 +1,273 @@
+ Removing unpermitted intrinsics
+websdk.appsflyer.com/?st=pba&:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+/import/zip:1 The source list for the Content Security Policy directive 'default-src' contains an invalid source: ''unsafe-dynamic''. It will be ignored.
+/import/zip:1 The Content-Security-Policy directive 'default-src' contains 'report-uri' as a source expression. Did you want to add it as a directive and forget a semicolon?
+/import/zip:1 The source list for Content Security Policy directive 'default-src' contains a source with an invalid path: '/api/4509669501698048/security/?sentry_key=7eb3d90eb4660416caf507087367e67e'. The query component, including the '?', will be ignored.
+ 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+ Download the Apollo DevTools for a better development experience: https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm
+ [LaunchDarkly] LaunchDarkly client initialized
+chrome-extension://j…ntent_reporter.js:1 Uncaught 
+ Removing unpermitted intrinsics
+ [Coframe] Replit Enterprise watcher loaded
+ Removing unpermitted intrinsics
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+ Removing unpermitted intrinsics
+ Removing unpermitted intrinsics
+m.stripe.com/6:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+ stallwart: failed ping 1
+ stallwart: failed ping 2
+ stallwart: failed ping 3
+ stallwart: failed ping 4
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/diagnostic/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10e…f4db5c4ea98f1f.js:1 Uncaught (in promise) 
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+ [ai-chat] Creating connection with chat proxy enabled
+(anonymous) @ 0759ecb6676892da.js:2
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+ Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'ambient-light-sensor'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'battery'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'execution-while-not-rendered'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'execution-while-out-of-viewport'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'layout-animations'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'legacy-image-formats'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'navigation-override'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'oversized-images'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'publickey-credentials'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'speaker-selection'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'unoptimized-images'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'unsized-media'.
+z @ ed1e693c96a75807.js:2
+ Unrecognized feature: 'pointer-lock'.
+z @ ed1e693c96a75807.js:2
+ Allow attribute will take precedence over 'allowfullscreen'.
+z @ ed1e693c96a75807.js:2
+ Allow attribute will take precedence over 'allowpaymentrequest'.
+z @ ed1e693c96a75807.js:2
+ Removing unpermitted intrinsics
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'battery'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html?initialPath=%2F&id=%3Ar8c%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+ Removing unpermitted intrinsics
+41ebdf8d-9b81-4825-9a2f-66c58e75b885-00-wyhvuidfu6dw.picard.replit.dev/api/analytics/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+41ebdf8d-9b81-4825-9a2f-66c58e75b885-00-wyhvuidfu6dw.picard.replit.dev/api/analytics/charts:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+injected.js:37 [vite] server connection lost. Polling for restart...
+lockdown-install.js:1 Removing unpermitted intrinsics
+injected.js:37 [vite] server connection lost. Polling for restart...
+lockdown-install.js:1 Removing unpermitted intrinsics
+injected.js:37 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+(anonymous) @ injected.js:37
+injected.js:37 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ injected.js:37
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+injected.js:37 [vite] server connection lost. Polling for restart...
+lockdown-install.js:1 Removing unpermitted intrinsics
+41ebdf8d-9b81-4825-9a2f-66c58e75b885-00-wyhvuidfu6dw.picard.replit.dev/src/index.css?t=1768662483293:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+41ebdf8d-9b81-4825-9a2f-66c58e75b885-00-wyhvuidfu6dw.picard.replit.dev/src/pages/Dashboard.tsx?t=1768662483293:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+injected.js:37 [vite] Failed to reload /src/index.css. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37
+injected.js:37 [vite] Failed to reload /src/pages/Dashboard.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+(anonymous) @ injected.js:37
+injected.js:37 [vite] server connection lost. Polling for restart...
+lockdown-install.js:1 Removing unpermitted intrinsics
+banner-script.js:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+main.tsx:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+@react-refresh:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+env.mjs:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+favicon.png:1  Failed to load resource: the server responded with a status of 502 (Bad Gateway)
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1 Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-c4942301eb10ece437f4db5c4ea98f1f.js:1:229441
+0759ecb6676892da.js:2  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1 Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-c4942301eb10ece437f4db5c4ea98f1f.js:1:229441
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+value @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1 Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-c4942301eb10ece437f4db5c4ea98f1f.js:1:229441
+0759ecb6676892da.js:2  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ 0759ecb6676892da.js:2
+  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10e…f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1  Failed to load resource: net::ERR_BLOCKED_BY_ADBLOCKER
+(anonymous) @ shared-c4942301eb10ece437f4db5c4ea98f1f.js:1
+shared-c4942301eb10ece437f4db5c4ea98f1f.js:1 Uncaught (in promise) FetchError: Error fetching https://r.stripe.com/b: Failed to fetch
+    at shared-c4942301eb10ece437f4db5c4ea98f1f.js:1:229441
