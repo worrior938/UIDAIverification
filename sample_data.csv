@@ -1,0 +1,13 @@
+state,district,pincode,date,gender,age_group
+Maharashtra,Mumbai,400001,2023-01-15,M,18+
+Karnataka,Bangalore,560001,2023-01-16,F,5-17
+Delhi,New Delhi,110001,2023-01-17,M,18+
+Uttar Pradesh,Lucknow,226001,2023-01-18,F,0-5
+Tamil Nadu,Chennai,600001,2023-01-19,M,18+
+Maharashtra,Pune,411001,2023-01-20,F,18+
+Karnataka,Mysore,570001,2023-01-21,M,5-17
+Delhi,South Delhi,110062,2023-01-22,F,18+
+Gujarat,Ahmedabad,380001,2023-01-23,M,18+
+West Bengal,Kolkata,700001,2023-01-24,F,5-17
+invalid,invalid,000000,2023-01-25,M,18+
+Maharashtra,Mumbai,400050,2023-01-26,F,18+
