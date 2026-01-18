@@ -123,6 +123,10 @@ export default function Records() {
       header: "Status",
       cell: info => <StatusBadge status={info.getValue()} />,
     }),
+    columnHelper.accessor("details", {
+      header: "Reason",
+      cell: info => <span className="text-sm text-slate-500 italic">{info.getValue() || "No details available"}</span>,
+    }),
   ];
 
   const columns = [...baseColumns, ...dynamicColumns, ...statusColumns];
