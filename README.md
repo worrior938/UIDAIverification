@@ -2,6 +2,10 @@
 
 A comprehensive data analytics and verification system designed to validate Aadhaar-related demographic data against official Census 2021 government records. This platform enables administrative authorities to identify discrepancies, verify biometric and demographic enrollments, and analyze data trends across different states and districts in India.
 
+## 🌐 Live Demo
+
+Check out the live application: [https://uida-iverification-1--worrior938.replit.app](https://uida-iverification-1--worrior938.replit.app)
+
 ## 🚀 Features
 
 ### Interactive Dashboard
