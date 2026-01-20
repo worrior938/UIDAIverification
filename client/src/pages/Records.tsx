@@ -32,6 +32,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type Status = 'Verified' | 'Mismatch' | 'NotFound';
 
+const STATUS_LABELS: Record<Status, string> = {
+  Verified: "Verified",
+  Mismatch: "Mismatch",
+  NotFound: "Not Verified",
+};
+
 const StatusBadge = ({ status }: { status: string }) => {
   const styles = {
     Verified: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -45,10 +51,12 @@ const StatusBadge = ({ status }: { status: string }) => {
     NotFound: AlertTriangle,
   }[status] || AlertTriangle;
 
+  const label = STATUS_LABELS[status as Status] || status;
+
   return (
     <span className={cn("inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border gap-1.5", styles)}>
       <Icon className="w-3 h-3" />
-      {status}
+      {label}
     </span>
   );
 };
@@ -186,18 +194,23 @@ export default function Records() {
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-slate-500" />
               <div className="flex gap-1 p-1 bg-slate-200/50 rounded-lg">
-                {['all', 'Verified', 'Mismatch', 'NotFound'].map((s) => (
+                {[
+                  { value: "all", label: "All" },
+                  { value: "Verified", label: "Verified" },
+                  { value: "Mismatch", label: "Mismatch" },
+                  { value: "NotFound", label: "Not Verified" },
+                ].map((option) => (
                   <button
-                    key={s}
-                    onClick={() => setStatusFilter(s as any)}
+                    key={option.value}
+                    onClick={() => setStatusFilter(option.value as any)}
                     className={cn(
                       "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
-                      statusFilter === s 
+                      statusFilter === option.value 
                         ? "bg-white text-primary shadow-sm" 
                         : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
                     )}
                   >
-                    {s === 'all' ? 'All' : s}
+                    {option.label}
                   </button>
                 ))}
               </div>

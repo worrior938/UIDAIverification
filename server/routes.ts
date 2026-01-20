@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import multer from "multer";
+import { spawn } from "child_process";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
@@ -15,51 +16,231 @@ const upload = multer({
   limits: { fileSize: 30 * 1024 * 1024 } // 30MB limit
 });
 
-// Mock Government Data Loading
-// In a real app, this would verify against the loaded CSVs
-// For this MVP, we will simulate the government database in memory
-interface GovRecord {
-  state: string;
-  district: string;
-  pincode: string;
-  // We'll store a simplified key for O(1) lookup: "state|district|pincode"
+type KnownFileType = "biometric" | "enrollment" | "demographic";
+type FileType = KnownFileType | "unknown";
+
+type GovRecord = Record<string, string | number | null>;
+type GovDataSource =
+  | { kind: "file"; path: string; label: string }
+  | { kind: "zip"; zipPath: string; entry: string; label: string };
+
+const KNOWN_FILE_TYPES: KnownFileType[] = ["biometric", "enrollment", "demographic"];
+const AGE_COLUMNS_BY_TYPE: Record<KnownFileType, string[]> = {
+  biometric: ["bio_age_5_17", "bio_age_17_"],
+  enrollment: ["age_0_5", "age_5_17", "age_18_greater"],
+  demographic: ["demo_age_5_17", "demo_age_17_"],
+};
+
+const GOV_PATH_ENV: Record<KnownFileType, string> = {
+  biometric: "GOV_BIOMETRIC_PATH",
+  enrollment: "GOV_ENROLLMENT_PATH",
+  demographic: "GOV_DEMOGRAPHIC_PATH",
+};
+
+const GOV_FILE_PREFIXES: Record<KnownFileType, string[]> = {
+  biometric: ["api_data_aadhar_biometric", "gov_biometric"],
+  enrollment: ["api_data_aadhar_enrolment", "gov_enrollment", "gov_enrolment"],
+  demographic: ["api_data_aadhar_demographic", "gov_demographic"],
+};
+
+const DEFAULT_GOV_ZIP_PATH =
+  process.env.GOV_DATA_ZIP_PATH || path.join(process.cwd(), "UIDAI-Verifier.zip");
+const DEFAULT_GOV_ZIP_ENTRIES: Record<KnownFileType, string> = {
+  biometric:
+    "UIDAI-Verifier/attached_assets/api_data_aadhar_biometric_1500000_1861108_1768659323892.csv",
+  enrollment:
+    "UIDAI-Verifier/attached_assets/api_data_aadhar_enrolment_1000000_1006029_1768659323870.csv",
+  demographic:
+    "UIDAI-Verifier/attached_assets/api_data_aadhar_demographic_2000000_2071700_1768659323892.csv",
+};
+
+const govDataSets: Record<KnownFileType, Map<string, GovRecord>> = {
+  biometric: new Map(),
+  enrollment: new Map(),
+  demographic: new Map(),
+};
+const govDataLoaded = new Set<KnownFileType>();
+
+function isKnownFileType(value: string): value is KnownFileType {
+  return KNOWN_FILE_TYPES.includes(value as KnownFileType);
 }
 
-// Map to store gov data for verification
-const govDataMap = new Set<string>();
+function normalizeHeader(header: string): string {
+  return header.trim().toLowerCase().replace(/\s+/g, "_");
+}
 
-// Generate/Load Mock Data
-function loadGovernmentData() {
-  console.log("Loading government datasets...");
-  
-  // Use a much larger set of mock data to ensure matches
-  const states = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", 
-    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", 
-    "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", 
-    "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-    "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", 
-    "Uttar Pradesh", "Uttarakhand", "West Bengal"
-  ];
+function normalizeKeyPart(value: unknown): string {
+  return String(value ?? "").trim().toLowerCase();
+}
 
-  // We'll generate a broad range of pincodes for each state to increase match probability
-  for (const state of states) {
-    for (let i = 0; i < 50; i++) {
-      // Generate some pincodes that are likely to appear
-      const pincodePrefix = Math.floor(100 + Math.random() * 800);
-      const pincode = `${pincodePrefix}${Math.floor(100 + Math.random() * 899)}`;
-      
-      // We don't have a district list for every state here, so we'll use a generic one or none
-      // But we'll add some realistic looking district names
-      const district = `District ${i}`;
-      
-      govDataMap.add(`${state.toLowerCase()}|${district.toLowerCase()}|${pincode}`);
+function normalizeDate(value: unknown): string {
+  if (!value) return "";
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const parsed = XLSX.SSF?.parse_date_code?.(value);
+    if (parsed?.y && parsed?.m && parsed?.d) {
+      const month = String(parsed.m).padStart(2, "0");
+      const day = String(parsed.d).padStart(2, "0");
+      return `${parsed.y}-${month}-${day}`;
     }
   }
-  
-  // ADD SPECIFIC MATCHES FOR THE SAMPLE DATA IF WE CAN IDENTIFY THEM
-  // Or just make the verification logic much more lenient for the demo
-  console.log(`Loaded ${govDataMap.size} government records into memory.`);
+  return String(value).trim();
+}
+
+function buildRecordKey(row: Record<string, unknown>): string | null {
+  const date = normalizeDate(row.date);
+  const state = normalizeKeyPart(row.state);
+  const district = normalizeKeyPart(row.district);
+  const pincode = String(row.pincode ?? "").trim();
+
+  if (!date || !state || !district || !pincode) return null;
+  return `${date}|${state}|${district}|${pincode}`;
+}
+
+function normalizeComparableValue(value: unknown): string | number | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  const text = String(value).trim();
+  if (!text) return null;
+  const num = Number(text);
+  return Number.isNaN(num) ? text.toLowerCase() : num;
+}
+
+function getComparableColumns(uploadedColumns: string[], fileType: FileType): string[] {
+  if (!isKnownFileType(fileType)) return [];
+  const ageColumns = AGE_COLUMNS_BY_TYPE[fileType];
+  return ageColumns.filter((col) => uploadedColumns.includes(col));
+}
+
+function findFileByPrefix(dirPath: string, prefixes: string[]): string | null {
+  try {
+    const files = fs.readdirSync(dirPath);
+    const match = files.find(
+      (file) =>
+        file.endsWith(".csv") && prefixes.some((prefix) => file.startsWith(prefix))
+    );
+    return match ? path.join(dirPath, match) : null;
+  } catch {
+    return null;
+  }
+}
+
+function resolveGovDataSource(fileType: KnownFileType): GovDataSource | null {
+  const explicitPath = process.env[GOV_PATH_ENV[fileType]];
+  if (explicitPath && fs.existsSync(explicitPath)) {
+    return { kind: "file", path: explicitPath, label: explicitPath };
+  }
+
+  const searchDirs = [
+    process.env.GOV_DATA_DIR,
+    path.join(process.cwd(), "attached_assets"),
+    path.join(process.cwd(), "server", "data"),
+    path.join(process.cwd(), "data"),
+  ].filter(Boolean) as string[];
+
+  for (const dir of searchDirs) {
+    const match = findFileByPrefix(dir, GOV_FILE_PREFIXES[fileType]);
+    if (match) return { kind: "file", path: match, label: match };
+  }
+
+  if (DEFAULT_GOV_ZIP_PATH && fs.existsSync(DEFAULT_GOV_ZIP_PATH)) {
+    const entry = DEFAULT_GOV_ZIP_ENTRIES[fileType];
+    return {
+      kind: "zip",
+      zipPath: DEFAULT_GOV_ZIP_PATH,
+      entry,
+      label: `${DEFAULT_GOV_ZIP_PATH}:${entry}`,
+    };
+  }
+
+  return null;
+}
+
+function createGovDataStream(
+  source: GovDataSource
+): { stream: NodeJS.ReadableStream; completion?: Promise<void> } {
+  if (source.kind === "file") {
+    return { stream: fs.createReadStream(source.path) };
+  }
+
+  const child = spawn("unzip", ["-p", source.zipPath, source.entry]);
+  if (!child.stdout) {
+    throw new Error(`Unable to read government dataset from ${source.label}`);
+  }
+
+  const completion = new Promise<void>((resolve, reject) => {
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`unzip exited with code ${code}`));
+    });
+  });
+
+  return { stream: child.stdout, completion };
+}
+
+function parseGovernmentDataset(
+  fileType: KnownFileType,
+  source: GovDataSource
+): Promise<{ dataset: Map<string, GovRecord>; count: number }> {
+  const dataset = new Map<string, GovRecord>();
+  const { stream, completion } = createGovDataStream(source);
+  const ageColumns = AGE_COLUMNS_BY_TYPE[fileType];
+
+  const parsePromise = new Promise<{ dataset: Map<string, GovRecord>; count: number }>(
+    (resolve, reject) => {
+      let count = 0;
+      Papa.parse(stream, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: true,
+        transformHeader: normalizeHeader,
+        step: (result) => {
+          const row = result.data as Record<string, unknown>;
+          if (!row) return;
+
+          const key = buildRecordKey(row);
+          if (!key) return;
+
+          const record: GovRecord = {};
+          for (const col of ageColumns) {
+            record[col] = normalizeComparableValue(row[col]);
+          }
+          dataset.set(key, record);
+          count += 1;
+        },
+        complete: () => resolve({ dataset, count }),
+        error: (error) => reject(error),
+      });
+    }
+  );
+
+  if (completion) {
+    return Promise.all([parsePromise, completion]).then(([result]) => result);
+  }
+
+  return parsePromise;
+}
+
+async function loadGovernmentData(): Promise<void> {
+  console.log("Loading official government datasets...");
+
+  for (const fileType of KNOWN_FILE_TYPES) {
+    const source = resolveGovDataSource(fileType);
+    if (!source) {
+      console.warn(`[gov] No dataset configured for ${fileType}.`);
+      continue;
+    }
+
+    try {
+      const { dataset, count } = await parseGovernmentDataset(fileType, source);
+      govDataSets[fileType] = dataset;
+      govDataLoaded.add(fileType);
+      console.log(`[gov] Loaded ${count} ${fileType} records from ${source.label}.`);
+    } catch (error) {
+      console.warn(`[gov] Failed to load ${fileType} dataset:`, error);
+    }
+  }
 }
 
 export async function registerRoutes(
@@ -67,7 +248,7 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   // Initialize gov data
-  loadGovernmentData();
+  await loadGovernmentData();
 
   // API Routes
   
@@ -89,7 +270,7 @@ export async function registerRoutes(
           header: true,
           skipEmptyLines: true,
           dynamicTyping: true,
-          transformHeader: (h) => h.trim().toLowerCase().replace(/\s+/g, '_')
+          transformHeader: normalizeHeader
         });
         parsedData = result.data;
       } else if (fileName.match(/\.xlsx?$/)) {
@@ -100,7 +281,7 @@ export async function registerRoutes(
         parsedData = parsedData.map((row: any) => {
           const newRow: any = {};
           Object.keys(row).forEach(key => {
-            newRow[key.trim().toLowerCase().replace(/\s+/g, '_')] = row[key];
+            newRow[normalizeHeader(key)] = row[key];
           });
           return newRow;
         });
@@ -110,9 +291,12 @@ export async function registerRoutes(
 
       // Dynamic Column Detection
       const uploadedColumns = Object.keys(parsedData[0] || {});
-      const fileType = uploadedColumns.includes('bio_age_5_17') ? 'biometric' :
+      const fileType: FileType = uploadedColumns.includes('bio_age_5_17') ? 'biometric' :
                        uploadedColumns.includes('age_0_5') ? 'enrollment' :
                        uploadedColumns.includes('demo_age_5_17') ? 'demographic' : 'unknown';
+      const comparableColumns = getComparableColumns(uploadedColumns, fileType);
+      const hasGovData = isKnownFileType(fileType) && govDataLoaded.has(fileType);
+      const govDataset = isKnownFileType(fileType) ? govDataSets[fileType] : null;
 
       // Verify Data
       let verifiedCount = 0;
@@ -121,36 +305,55 @@ export async function registerRoutes(
       const recordsToInsert = [];
 
       for (const row of parsedData) {
-        const state = String(row.state || '').trim().toLowerCase();
-        const district = String(row.district || '').trim().toLowerCase();
-        const pincode = String(row.pincode || '').trim();
-        const date = row.date;
+        const dateValue = normalizeDate(row.date);
+        const key = buildRecordKey(row);
+        const columnsToCompare = comparableColumns.filter((col) =>
+          Object.prototype.hasOwnProperty.call(row, col)
+        );
 
-        let status = 'NotFound';
-        let details = 'Record not found in government database';
+        let status = "NotFound";
+        let details = "Record not verified against official government database";
 
-        if (state && (district || pincode)) {
-          const key = `${state}|${district}|${pincode}`;
-          const rand = Math.random();
-          if (govDataMap.has(key) || rand > 0.6) {
-            status = 'Verified';
-            details = 'Matched with government records';
-            verifiedCount++;
-          } else if (rand > 0.3) {
-            status = 'Mismatch';
-            details = 'Data exists but values mismatch';
-            mismatchCount++;
-          } else {
-            notFoundCount++;
-          }
+        if (!isKnownFileType(fileType)) {
+          details = "Unknown file type; unable to verify against official government database";
+          notFoundCount++;
+        } else if (!key) {
+          details = "Missing required fields (date, state, district, pincode)";
+          notFoundCount++;
+        } else if (!hasGovData || !govDataset) {
+          details = "Official government database unavailable for this file type";
+          notFoundCount++;
         } else {
-           notFoundCount++;
-           details = 'Missing required fields (state, district, pincode)';
+          const govRecord = govDataset.get(key);
+          if (!govRecord) {
+            details = "Record not found in official government database";
+            notFoundCount++;
+          } else if (columnsToCompare.length === 0) {
+            details = "No comparable age columns found in this record";
+            notFoundCount++;
+          } else {
+            const mismatchedColumns: string[] = [];
+            for (const col of columnsToCompare) {
+              const uploadedValue = normalizeComparableValue(row[col]);
+              const govValue = normalizeComparableValue(govRecord[col]);
+              if (uploadedValue !== govValue) mismatchedColumns.push(col);
+            }
+
+            if (mismatchedColumns.length > 0) {
+              status = "Mismatch";
+              details = `Mismatch in columns: ${mismatchedColumns.join(", ")}`;
+              mismatchCount++;
+            } else {
+              status = "Verified";
+              details = "Matched with official government records";
+              verifiedCount++;
+            }
+          }
         }
 
         recordsToInsert.push({
           uploadId: 0,
-          date: date ? String(date) : null,
+          date: dateValue || null,
           state: row.state || null,
           district: row.district || null,
           pincode: row.pincode ? String(row.pincode) : null,

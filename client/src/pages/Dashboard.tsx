@@ -105,9 +105,9 @@ export default function Dashboard() {
             color="red"
           />
           <StatCard 
-            label="Data Not Found"
+            label="Not Verified"
             value={formatNumber(stats.notFound)}
-            subtext="Missing in database"
+            subtext="Missing in government database"
             icon={AlertTriangle}
             color="amber"
           />

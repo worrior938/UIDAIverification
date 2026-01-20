@@ -68,7 +68,7 @@ export function StateDistributionChart({ data }: { data: any[] }) {
         />
         <Bar dataKey="verified" name="Verified" stackId="a" fill={COLORS.verified} radius={[0, 4, 4, 0]} barSize={20} />
         <Bar dataKey="mismatch" name="Mismatch" stackId="a" fill={COLORS.mismatch} radius={[0, 4, 4, 0]} barSize={20} />
-        <Bar dataKey="notFound" name="Not Found" stackId="a" fill={COLORS.notFound} radius={[0, 4, 4, 0]} barSize={20} />
+        <Bar dataKey="notFound" name="Not Verified" stackId="a" fill={COLORS.notFound} radius={[0, 4, 4, 0]} barSize={20} />
       </BarChart>
     </ResponsiveContainer>
   );
