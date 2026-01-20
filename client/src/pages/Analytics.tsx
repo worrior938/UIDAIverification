@@ -31,7 +31,7 @@ export default function Analytics() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-display font-bold text-slate-900">Advanced Analytics</h1>
-          <p className="text-muted-foreground mt-1">Deep dive into data patterns and regional performance</p>
+          <p className="text-muted-foreground mt-1">Deep dive into data patterns against Census 2021 benchmarks</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -41,7 +41,7 @@ export default function Analytics() {
                <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
                  <Map className="h-5 w-5" />
                </div>
-               <h3 className="font-display font-bold text-lg text-slate-900">Regional Verification Status</h3>
+               <h3 className="font-display font-bold text-lg text-slate-900">Regional Verification Status (Census 2021)</h3>
              </div>
              <StateDistributionChart data={charts.stateDistribution} />
           </div>

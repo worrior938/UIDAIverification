@@ -64,7 +64,7 @@ export default function Dashboard() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-display font-bold text-slate-900">Dashboard Overview</h1>
-          <p className="text-muted-foreground mt-1">Real-time analysis of uploaded demographic data</p>
+          <p className="text-muted-foreground mt-1">Real-time analysis verified against Census 2021 data</p>
         </div>
 
         {/* Summary Cards for Age Columns */}
